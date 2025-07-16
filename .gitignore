@@ -1,0 +1,7 @@
+# Ignore JetBrains project files
+.idea/
+
+# Optional: other common ignores
+.log
+.tmp
+.DS_Store
