@@ -12,25 +12,152 @@
   <h2>Table of Contents</h2>
   <ul>
     <li><a href="#overview">Overview</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#examples">Examples</a></li>
+    <li><a href="#Features">Features</a></li>
+    <li><a href="#Installation">Installation</a></li>
+    <li><a href="#QuickStartBlueprint">Quick Start (Blueprint)</a></li>
+    <li><a href="#QuickStartCpp">Quick Start (C++)</a></li>
+    <li><a href="#Options">Options</a></li>
+    <li><a href="#Tips">Tips</a></li>
   </ul>
 
   <h2 id="overview">Overview</h2>
-  <p><code>JayAnimator</code> streamlines real-time animation workflows in Unreal Engine 5.</p>
+  <p><code>JayAnimator</code> streamlines real-time animation workflows in Unreal Engine 5</p>
 
-  <h2 id="usage">Usage</h2>
-  <p>Launch Unreal Engine and enable the plugin via <strong>Edit > Plugins</strong>.</p>
+<p>It provides smooth tween animations for Actors and Components using C++ and Blueprint and supports <strong>location</strong>, <strong>rotation</strong>, <strong>scale</strong>, and <strong>material parameter</strong> tweens, allowing you to create polished animations with minimal effort.</p>
 
-  <h2 id="examples">Examples</h2>
-  <pre><code>// ToolA usage example
-FAssetToolsModule& AssetToolsModule = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools");
-AssetToolsModule.Get().CreateUniqueAssetName(TEXT("/Game/MyAsset"), TEXT(""), OutPackageName, OutAssetName);
-  </code></pre>
 
-  <!--
-  <p>Sample UI preview:</p>
-  <img src="images/sample.png" alt="ToolA UI Preview">
-  -->
+<br />
+<h2 id="Features">📌 Features</h2>
+
+<ul>
+<li>Tween <strong>Location</strong>, <strong>Rotation</strong>, <strong>Scale</strong> (Vector/Transform)</li>
+<li>Tween <strong>Material Parameters</strong> (Float, Vector, Color)</li>
+<li>Easy-to-use <strong>Blueprint Library</strong> and <strong>C++ API</strong></li>
+<li>Supports easing functions (Linear, EaseIn, EaseOut, etc.)</li>
+<li>Configurable options for delay, looping, yoyo, and more</li>
+<li>Optional completion delegate (<code>OnComplete</code>)</li>
+<li>Works with any <code>AActor</code> or <code>USceneComponent</code></li>
+</ul>
+
+
+<br />
+<h2 id="Installation">📂 Installation</h2>
+
+<ol>
+<li><p><strong>Copy the Plugin</strong><br />
+Place the <code>JayAnimator</code> folder into your project's <code>Plugins/</code> directory.</p></li>
+<li><p><strong>Enable in Unreal Engine</strong><br />
+Open your project → <em>Edit</em> → <em>Plugins</em> → Search for <code>JayAnimator</code> → Enable.</p></li>
+<li><p><strong>Restart Unreal Engine</strong> to complete setup.</p></li>
+</ol>
+
+<br />
+<h2 id="QuickStartBlueprint">🚀 Quick Start (Blueprint)</h2>
+
+<h3>Example: Tween Actor Location</h3>
+
+<ol>
+<li>Add the <strong><code>TweenLocation</code></strong> node from <strong>jTween</strong> category in Blueprint.</li>
+<li>Set:
+<ul>
+<li><strong>Actor</strong>: The target actor</li>
+<li><strong>From</strong>: Starting location</li>
+<li><strong>To</strong>: Target location</li>
+<li><strong>Duration</strong>: Time in seconds</li>
+<li><strong>Easing</strong>: e.g., Linear, EaseInOut</li>
+<li>(Optional) <strong>OnComplete</strong>: Event to trigger after tween finishes</li>
+</ul></li>
+</ol>
+
+<h3>Example: Tween Material Parameter</h3>
+
+<ol>
+<li>Use <strong><code>TweenMatParamFloat1</code></strong> (for scalar parameters) or other material tween nodes.</li>
+<li>Provide:
+<ul>
+<li><strong>Actor</strong></li>
+<li><strong>From</strong> / <strong>To</strong> values</li>
+<li><strong>Duration</strong></li>
+<li><strong>Material Options</strong> (slot name, parameter name)</li>
+<li><strong>OnComplete</strong> if needed</li>
+</ul></li>
+</ol>
+
+<br />
+<h3>Blueprint Node Examples</h3>
+
+Available Nodes:<br />
+<img src="images/available-nodes.png" alt="Available Nodes" width="400">
+
+<br /><br />
+Material Node:<br />
+<img src="images/jtween-mat.png" alt="jTween Material" width="700">
+
+<br /><br />
+Move Node:<br />
+<img src="images/jtween-location.png" alt="jTween Move" width="900">
+
+
+<br />
+<h2 id="QuickStartCpp">💻 Quick Start (C++)</h2>
+
+<p>Include the header in your class:</p>
+
+
+<pre><code>#include "jTweenBPLibrary.h"</code></pre>
+
+<p>Example: Tween Actor Location</p>
+
+<pre><code>FJTweenOptions Options;
+Options.Duration = 1.5f;
+
+UjTweenBPLibrary::TweenLocation(
+    MyActor, 
+    EJTweenEasing::Linear, 
+    FVector(0,0,0), 
+    FVector(300,0,0), 
+    1.5f, 
+    Options, 
+    FJTweenCompleteDelegate()
+);</code></pre>
+
+<p>Example: Tween Material Parameter</p>
+
+<pre><code>FJTweenMaterialOptions MatOptions;
+MatOptions.ShaderParamName = "MyParam";
+
+UjTweenBPLibrary::TweenMatParamFloat1(
+    MyActor,
+    EJTweenEasing::EaseInOut,
+    0.f,
+    1.f,
+    2.f,
+    MatOptions,
+    FJTweenOptions(),
+    FJTweenCompleteDelegate()
+);</code></pre>
+
+<br />
+<h2 id="Options">🔧 Options</h2>
+
+<p><code>FJTweenOptions</code> allows:
+- <strong>Delay</strong>: Start delay before tween begins
+- <strong>Loop Count</strong>: Number of times to repeat
+- <strong>Yoyo</strong>: Reverse back after finishing
+- <strong>TimeScale</strong>: Playback speed</p>
+
+<br />
+<h2 id="Tips">🎯 Tips</h2>
+
+<ul>
+<li>Use <strong>Advanced Pins</strong> to reveal optional parameters in Blueprint.</li>
+<li><code>OnComplete</code> is optional — leave unconnected if you don't need a callback.</li>
+<li>Works with <strong>spawned actors</strong> and <strong>scene components</strong>.</li>
+</ul>
+
+
+<p><strong>Author:</strong> Mohsen Jahanbakhshi<br />
+<strong>Category:</strong> Unreal Engine Plugins / Animation</p>
+
 </body>
 </html>
