@@ -21,33 +21,38 @@
   </ul>
 
   <h2 id="overview">Overview</h2>
-  <p><code>JayAnimator</code> streamlines real-time animation workflows in Unreal Engine 5</p>
+  <p><code>JayAnimator</code> is a lightweight tweening and animation framework that enables flexible, code-driven runtime animation workflows in Unreal Engine 5. </p>
 
-<p>It provides smooth tween animations for Actors and Components using C++ and Blueprint and supports <strong>location</strong>, <strong>rotation</strong>, <strong>scale</strong>, and <strong>material parameter</strong> tweens, allowing you to create polished animations with minimal effort.</p>
+<p>It provides smooth tween animations using C++ and Blueprint and supports <strong>transform</strong> and <strong>material parameter</strong> tweens, allowing you to create polished animations with minimal effort.</p>
 
 
 <br />
 <h2 id="Features">📌 Features</h2>
 
 <ul>
-<li>Tween <strong>Location</strong>, <strong>Rotation</strong>, <strong>Scale</strong> (Vector/Transform)</li>
-<li>Tween <strong>Material Parameters</strong> (Float, Vector, Color)</li>
-<li>Easy-to-use <strong>Blueprint Library</strong> and <strong>C++ API</strong></li>
+<li>Runtime task-based tweening system</li>
+<li>Engine-level plugin compatible</li>
+<li>Programmatic animation workflows</li>
+<li>Blueprint and C++ API support</li>
+<li>Rotation interpolation modes (6)</li>
+<li>Material parameter animation support</li>
 <li>Supports easing functions (Linear, EaseIn, EaseOut, etc.)</li>
 <li>Configurable options for delay, looping, yoyo, and more</li>
+<li>30+ built-in tween types</li>
 <li>Optional completion delegate (<code>OnComplete</code>)</li>
-<li>Works with any <code>AActor</code> or <code>USceneComponent</code></li>
+<li>Dedicated logging category</li>
 </ul>
-
 
 <br />
 <h2 id="Installation">📂 Installation</h2>
 
 <ol>
 <li><p><strong>Copy the Plugin</strong><br />
-Place the <code>JayAnimator</code> folder into your project's <code>Plugins/</code> directory.</p></li>
+Place the <code>JayAnimator</code> folder into the engine's <code>Plugins/</code> directory.</p></li>
 <li><p><strong>Enable in Unreal Engine</strong><br />
-Open your project → <em>Edit</em> → <em>Plugins</em> → Search for <code>JayAnimator</code> → Enable.</p></li>
+Open your project → <em>Edit</em> → <em>Plugins</em> → (<code>Engine Tools</code> category) or Search for <code>JayAnimator</code> → Enable.</p>
+<img src="images/jayanimator-plugins.png" alt="Enable in Plugins" width="1100">
+</li>
 <li><p><strong>Restart Unreal Engine</strong> to complete setup.</p></li>
 </ol>
 
@@ -57,45 +62,51 @@ Open your project → <em>Edit</em> → <em>Plugins</em> → Search for <code>Ja
 <h3>Example: Tween Actor Location</h3>
 
 <ol>
-<li>Add the <strong><code>TweenLocation</code></strong> node from <strong>jTween</strong> category in Blueprint.</li>
+<li>Add the <strong><code>Tween Move</code></strong> node from <strong>JayAnimator</strong>/<strong>Tween</strong> category in Blueprint.</li>
+<li>Make sure the actor's mobility is set to <code>movable</code>.</li>
 <li>Set:
 <ul>
 <li><strong>Actor</strong>: The target actor</li>
+<li><strong>Easing</strong>: e.g., Linear, EaseInOut</li>
 <li><strong>From</strong>: Starting location</li>
+<li>Or set <strong>StartFromCurrent</strong> to use the current location of the actor.</li>
 <li><strong>To</strong>: Target location</li>
 <li><strong>Duration</strong>: Time in seconds</li>
-<li><strong>Easing</strong>: e.g., Linear, EaseInOut</li>
-<li>(Optional) <strong>OnComplete</strong>: Event to trigger after tween finishes</li>
+<li>(Optional) set <strong>Options</strong>: custom curve, play mode and play count.</li>
+<li>(Optional) <strong>OnComplete</strong>: Event to trigger after tween finishes.</li>
 </ul></li>
 </ol>
 
 <h3>Example: Tween Material Parameter</h3>
 
 <ol>
-<li>Use <strong><code>TweenMatParamFloat1</code></strong> (for scalar parameters) or other material tween nodes.</li>
+<li>Use <strong><code>Tween Mat Param Float 1</code></strong> (for scalar parameters) or other material tween nodes.</li>
 <li>Provide:
 <ul>
-<li><strong>Actor</strong></li>
+<li><strong>Actor</strong>: The target actor</li>
+<li><strong>Easing</strong>: e.g., Linear, EaseInOut</li>
 <li><strong>From</strong> / <strong>To</strong> values</li>
-<li><strong>Duration</strong></li>
-<li><strong>Material Options</strong> (slot name, parameter name)</li>
-<li><strong>OnComplete</strong> if needed</li>
+<li><strong>Duration</strong>: Time in seconds</li>
+<li><strong>Create a material asset</strong> and make a float parameter and assign to the related material pin, and assign the material asset to the actor. </li>
+<li><strong>Material Options</strong> (required <code>shader parameter name</code>: the float parameter name), or providing an optional <code>shader name</code> for quick shader lookup.</li>
+<li>(Optional) Set <strong>Options</strong>: custom curve, play mode and play count.</li>
+<li>(Optional) <strong>OnComplete</strong>: Event to trigger after tween finishes.</li>
 </ul></li>
 </ol>
 
 <br />
 <h3>Blueprint Node Examples</h3>
 
-Available Nodes:<br />
-<img src="images/available-nodes.png" alt="Available Nodes" width="400">
+<strong>Tween Nodes</strong> <br />
+<img src="images/tween-nodes.png" alt="Tween Nodes" width="400">
 
 <br /><br />
-Material Node:<br />
-<img src="images/jtween-mat.png" alt="jTween Material" width="700">
+<strong>Material Nodes</strong><br />
+<img src="images/mat-nodes.png" alt="Material Nodes" width="800">
 
 <br /><br />
-Move Node:<br />
-<img src="images/jtween-location.png" alt="jTween Move" width="900">
+<strong>Transform Nodes</strong><br />
+<img src="images/transform-nodes.png" alt="Transform Nodes" width="1100">
 
 
 <br />
@@ -111,9 +122,10 @@ Move Node:<br />
 <pre><code>FJTweenOptions Options;
 Options.Duration = 1.5f;
 
-UjTweenBPLibrary::TweenLocation(
+UjTweenBPLibrary::TweenMove(
     MyActor, 
     EJTweenEasing::Linear, 
+    false,
     FVector(0,0,0), 
     FVector(300,0,0), 
     1.5f, 
@@ -137,27 +149,275 @@ UjTweenBPLibrary::TweenMatParamFloat1(
     FJTweenCompleteDelegate()
 );</code></pre>
 
+
+
+
+
 <br />
 <h2 id="Options">🔧 Options</h2>
 
-<p><code>FJTweenOptions</code> allows:
-- <strong>Delay</strong>: Start delay before tween begins
-- <strong>Loop Count</strong>: Number of times to repeat
-- <strong>Yoyo</strong>: Reverse back after finishing
-- <strong>TimeScale</strong>: Playback speed</p>
+<div class="jayanim-doc">
+
+  <style>
+    .jayanim-doc {
+      --ja-bg: #0f1620;
+      --ja-border: #26364f;
+      --ja-text: #e8eef6;
+      --ja-muted: #a8b3c4;
+      --ja-accent: #6ae4ff;
+      --ja-warn: #ffd479;
+      color: var(--ja-text);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .jayanim-doc .ja-section {
+      border: 1px solid var(--ja-border);
+      border-radius: 12px;
+      padding: 16px 16px 14px;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .jayanim-doc .ja-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+
+    .jayanim-doc .ja-subtitle {
+      color: var(--ja-muted);
+      margin-bottom: 12px;
+    }
+
+    .jayanim-doc .ja-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .jayanim-doc .ja-table th,
+    .jayanim-doc .ja-table td {
+      border: 1px solid var(--ja-border);
+      padding: 8px 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .jayanim-doc .ja-table th {
+      background: rgba(255,255,255,0.04);
+      font-weight: 600;
+    }
+
+    .jayanim-doc .ja-badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      margin-left: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--ja-border);
+      color: var(--ja-accent);
+      background: rgba(106,228,255,0.08);
+      vertical-align: middle;
+    }
+
+    .jayanim-doc .ja-badge-adv {
+      color: var(--ja-warn);
+      background: rgba(255,212,121,0.08);
+    }
+
+    .jayanim-doc .ja-callout {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-left: 4px solid var(--ja-accent);
+      background: rgba(106,228,255,0.06);
+      border-radius: 8px;
+    }
+
+    .jayanim-doc .ja-callout-warn {
+      border-left-color: var(--ja-warn);
+      background: rgba(255,212,121,0.06);
+    }
+
+    .jayanim-doc .ja-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: rgba(11,18,32,0.7);
+      border: 1px solid var(--ja-border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      white-space: pre-wrap;
+    }
+
+    .jayanim-doc .ja-note {
+      color: var(--ja-muted);
+      font-size: 14px;
+    }
+  </style>
+
+  <!-- FJTweenOptions -->
+  <div class="ja-section">
+    <div class="ja-title">FJTweenOptions</div>
+    <div class="ja-subtitle">
+      General playback options applied to all JayAnimator tween types.
+    </div>
+
+    <table class="ja-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>CustomCurve</code></td>
+          <td><code>UCurveFloat</code></td>
+          <td><code>null</code></td>
+          <td>
+            Optional custom curve driving the tween (0→1).
+            <div class="ja-note">
+              Use when built-in easing functions are not sufficient.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>PlayMode</code>
+            <span class="ja-badge ja-badge-adv">Advanced</span>
+          </td>
+          <td><code>EJTweenPlayMode</code></td>
+          <td><code>StartOver</code></td>
+          <td>
+            Defines how the tween behaves across multiple plays
+            (restart, reverse, ping-pong — depending on your enum).
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>PlayCount</code>
+            <span class="ja-badge ja-badge-adv">Advanced</span>
+          </td>
+          <td><code>int32</code></td>
+          <td><code>1</code></td>
+          <td>
+            Number of times the tween is played.
+            <div class="ja-note">
+              A value of <code>1</code> means “play once.”
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FJTweenMaterialOptions -->
+  <div class="ja-section">
+    <div class="ja-title">FJTweenMaterialOptions</div>
+    <div class="ja-subtitle">
+      Controls how material parameters are located and animated at runtime.
+    </div>
+
+    <table class="ja-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ShaderParamName</code></td>
+          <td><code>FName</code></td>
+          <td><code>None</code></td>
+          <td>
+            Name of the material parameter to animate.
+            <div class="ja-callout ja-callout-warn">
+              This field is required for material tweens.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><code>ShaderNameHint</code></td>
+          <td><code>FName</code></td>
+          <td><code>None</code></td>
+          <td>
+            Exact material name to target.
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>ShaderNamePrefixHint</code>
+            <span class="ja-badge ja-badge-adv">Advanced</span>
+          </td>
+          <td><code>FName</code></td>
+          <td><code>None</code></td>
+          <td>
+            Matches materials whose names start with this prefix
+            if <code>ShaderNameHint</code> is empty.
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>bMultiInstance</code>
+            <span class="ja-badge ja-badge-adv">Advanced</span>
+          </td>
+          <td><code>bool</code></td>
+          <td><code>false</code></td>
+          <td>
+            If enabled, all matching material instances are animated.
+            <div class="ja-note">
+              Otherwise, the first matching instance is used.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <code>bStopOnFirstParamMatch</code>
+            <span class="ja-badge ja-badge-adv">Advanced</span>
+          </td>
+          <td><code>bool</code></td>
+          <td><code>true</code></td>
+          <td>
+            Stops searching once a material exposing the parameter is found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="ja-callout">
+      <strong>Tip:</strong>
+      Vector-like tweens (<code>FVector</code>, <code>FVector4</code>, <code>FLinearColor</code>)
+      map to material <em>vector parameters</em>, while float tweens map to
+      <em>scalar parameters</em>.
+    </div>
+  </div>
+
+</div>
+
+
+
+
 
 <br />
+
+<!--
 <h2 id="Tips">🎯 Tips</h2>
-
 <ul>
-<li>Use <strong>Advanced Pins</strong> to reveal optional parameters in Blueprint.</li>
 <li><code>OnComplete</code> is optional — leave unconnected if you don't need a callback.</li>
-<li>Works with <strong>spawned actors</strong> and <strong>scene components</strong>.</li>
 </ul>
-
+-->
 
 <p><strong>Author:</strong> Mohsen Jahanbakhshi<br />
-<strong>Category:</strong> Unreal Engine Plugins / Animation</p>
+<strong>Category:</strong> Unreal Engine Plugins / Engine Tools</p>
 
 </body>
 </html>
